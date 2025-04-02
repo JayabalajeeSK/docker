@@ -1,0 +1,199 @@
+Student App
+
+-------------------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.4.4</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.jb</groupId>
+	<artifactId>student-app</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>student-app</name>
+	<description>Demo project for Spring Boot</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>21</java.version>
+		   <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency> 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+	<finalName>student-app</finalName>
+		<plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+             <!-- Use a stable version -->
+            <configuration>
+                <source>21</source>
+                <target>21</target>
+            </configuration>
+        </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+-----------------------------------------------------------
+Dockerfile
+
+FROM openjdk:22-jdk
+ADD target/student-app.jar student-app.jar
+ENTRYPOINT [ "java","-jar","/student-app.jar" ]
+
+-----------------------------------------------------------
+docker-compose.yaml
+version: "3.7"
+
+services:
+  app:
+    # image: your-app-image:latest  # Replace with your app image
+    build: .
+      # context: .  # Build context, if you are building the image locally
+    ports:
+      - "8080:8080"  # Expose your app's port
+    # environment:
+    #   SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/your_database_name
+    #   SPRING_DATASOURCE_USERNAME: root
+    #   SPRING_DATASOURCE_PASSWORD: your_password
+    #   SPRING_JPA_HIBERNATE_DDL_AUTO: update  # Adjust Hibernate DDL auto value if needed
+    #   SPRING_SQL_INIT_MODE: always  # To initialize DB on app start
+    #   SPRING_SQL_INIT_PLATFORM: mysql  # Set the platform for initialization
+    # depends_on:
+    #   - mysql
+    # networks:
+    #   - app-network
+
+  mysql:
+    image: mysql:8.0  # Use the MySQL 8.0 image
+    environment:
+      MYSQL_ROOT_PASSWORD: tharunsk4doc  # Set the root password for MySQL
+      MYSQL_DATABASE: tharunsk4docdb  # The name of your database
+    ports:
+      - "3306:3307"  # Expose MySQL's default port
+#     volumes:
+#       - mysql-data:/var/lib/mysql  # Persist MySQL data across container restarts
+#     networks:
+#       - app-network
+
+# networks:
+#   app-network:
+#     driver: bridge
+
+# volumes:
+#   mysql-data:  # Define a volume to persist MySQL data
+
+--------------------------------------------------------------------
+
+E:\TMachineTraining\docker\student-app>docker-compose up --build
+time="2025-04-01T17:46:00+05:30" level=warning msg="E:\\TMachineTraining\\docker\\student-app\\docker-compose.yaml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Running 12/12
+ ✔ mysql Pulled                                                                                                                                       89.1s 
+[+] Building 5.4s (9/9) FINISHED                                                                                                       docker:desktop-linux
+ => [app internal] load build definition from Dockerfile                                                                                               0.0s
+ => => transferring dockerfile: 149B                                                                                                                   0.0s 
+ => [app internal] load metadata for docker.io/library/openjdk:22-jdk                                                                                  0.0s 
+ => [app internal] load .dockerignore                                                                                                                  0.0s 
+ => => transferring context: 2B                                                                                                                        0.0s 
+ => [app internal] load build context                                                                                                                  1.3s
+ => => transferring context: 53.03MB                                                                                                                   1.3s
+ => CACHED [app 1/2] FROM docker.io/library/openjdk:22-jdk@sha256:b7d44427f4622d3f6b9a60583e5218ecfa8b4e44f3e01dfd0d9b7d7abba31c9a                     2.3s 
+ => => resolve docker.io/library/openjdk:22-jdk@sha256:b7d44427f4622d3f6b9a60583e5218ecfa8b4e44f3e01dfd0d9b7d7abba31c9a                                2.3s 
+ => [app auth] library/openjdk:pull token for registry-1.docker.io                                                                                     0.0s 
+ => [app 2/2] ADD target/student-app.jar student-app.jar                                                                                               0.6s 
+ => [app] exporting to image                                                                                                                           2.2s 
+ => => exporting layers                                                                                                                                1.9s 
+ => => exporting manifest sha256:de3e3a59230e1b99d38424986cb5ef68236cf5eadf15dcee7de873913b32f0fd                                                      0.0s 
+ => => exporting config sha256:d94ab16d35ee91bebdab5bbd02c74be585e38c6bc9c5b89f46c4104eb7d8c0e6                                                        0.0s 
+ => => exporting attestation manifest sha256:73eac0a1db1aa7aa938825837fb49a4c4aed31c12cf2e0b4e816759e047d7a93                                          0.0s 
+ => => exporting manifest list sha256:36dc96a560c173c7694bdbcf76383379757e613af4f5886bd9c4f845a6a3b743                                                 0.0s 
+ => => naming to docker.io/library/student-app-app:latest                                                                                              0.0s 
+ => => unpacking to docker.io/library/student-app-app:latest                                                                                           0.2s 
+ => [app] resolving provenance for metadata file                                                                                                       0.0s 
+[+] Running 4/4
+ ✔ app                            Built                                                                                                                0.0s 
+ ✔ Network student-app_default    Created                                                                                                              0.3s 
+ ✔ Container student-app-mysql-1  Created                                                                                                              0.2s 
+ ✔ Container student-app-app-1    Created                                                                                                              0.2s 
+Attaching to app-1, mysql-1
+Gracefully stopping... (press Ctrl+C again to force)
+Error response from daemon: Ports are not available: exposing port TCP 0.0.0.0:3306 -> 127.0.0.1:0: listen tcp 0.0.0.0:3306: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+
+E:\TMachineTraining\docker\student-app>docker images            
+REPOSITORY                                        TAG               IMAGE ID       CREATED          SIZE
+student-app-app                                   latest            36dc96a560c1   23 seconds ago   964MB
+
+------------------------------------------------------------
